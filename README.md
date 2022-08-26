@@ -1,5 +1,5 @@
 # RNA-Seq-Projects
-Small projects for RNA Seq analysis
+Small projects for Data wrangling
 
 ## RNA-Seq Data wrangling
 
