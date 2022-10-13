@@ -1,0 +1,20 @@
+#!/bin/bash
+# make sure there is no preexisting Docker CID file
+rm -f /Users/gargi/Desktop/wdl/cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution/docker_cid
+# run as in the original configuration without --rm flag (will remove later)
+docker run \
+  --cidfile /Users/gargi/Desktop/wdl/cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution/docker_cid \
+  -i \
+   \
+  --entrypoint /bin/bash \
+  -v /Users/gargi/Desktop/wdl/cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0:/cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0 \
+  broadinstitute/gatk@sha256:21c3cb43b7d11891ed4b63cc7274f20187f00387cfaa0433b3e7991b5be34dbe /cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution/script
+
+# get the return code (working even if the container was detached)
+rc=$(docker wait `cat /Users/gargi/Desktop/wdl/cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution/docker_cid`)
+
+# remove the container after waiting
+docker rm `cat /Users/gargi/Desktop/wdl/cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution/docker_cid`
+
+# return exit code
+exit $rc

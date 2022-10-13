@@ -1,0 +1,40 @@
+#!/bin/bash
+
+cd /cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution
+tmpDir=$(mkdir -p "/cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/tmp.0498cf3a" && echo "/cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/tmp.0498cf3a")
+chmod 777 "$tmpDir"
+export _JAVA_OPTIONS=-Djava.io.tmpdir="$tmpDir"
+export TMPDIR="$tmpDir"
+export HOME="$HOME"
+(
+cd /cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution
+
+)
+outebb2c731="${tmpDir}/out.$$" errebb2c731="${tmpDir}/err.$$"
+mkfifo "$outebb2c731" "$errebb2c731"
+trap 'rm "$outebb2c731" "$errebb2c731"' EXIT
+tee '/cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution/stdout' < "$outebb2c731" &
+tee '/cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution/stderr' < "$errebb2c731" >&2 &
+(
+cd /cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution
+
+
+/gatk/gatk \
+  ValidateSamFile \
+  --INPUT /cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/inputs/-329707364/NA12878.bam \
+  --OUTPUT NA12878.validation_.txt \
+  --MODE SUMMARY
+)  > "$outebb2c731" 2> "$errebb2c731"
+echo $? > /cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution/rc.tmp
+(
+# add a .file in every empty directory to facilitate directory delocalization on the cloud
+cd /cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution
+find . -type d -empty -print0 | xargs -0 -I % touch %/.file
+)
+(
+cd /cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution
+sync
+
+
+)
+mv /cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution/rc.tmp /cromwell-executions/ValidateBamsWf/ebb2c731-3dbd-493a-996a-5456d8050538/call-ValidateBAM/shard-0/execution/rc
